@@ -1,0 +1,22 @@
+{
+  "name": "urbn-franco-bot",
+  "version": "0.1.0",
+  "description": "URBN Personal Shopping Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/de-olagundoye/franco-bot.git"
+  },
+  "keywords": [
+    "shopping"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/de-olagundoye/franco-bot/issues"
+  },
+  "homepage": "https://github.com/de-olagundoye/franco-bot#readme"
+}
