@@ -16,6 +16,7 @@
  - Get results of what we’re expecting 
 
 [ ] **User Stories**
+
 [ ] **Determine Day 2 Tasks**
 
 
