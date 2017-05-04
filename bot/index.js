@@ -29,6 +29,7 @@ app.get('/bot/talk', async (req, res) => {
 
 app.post('/bot/talk', async (req, res) => {
     const text = req.body.text;
+    const searchTerm = text + ' ' + req.body.searchTerm;
     let token = _.get(req.cookies, 'urbnAuthToken');
     
     const client = new wit({accessToken: witToken});
