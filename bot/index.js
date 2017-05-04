@@ -12,7 +12,8 @@ const tokenClient = new TokenClient(`${config.baseURL}${config.a15.urls.token}`)
 const catalogClient = new CatalogClient(`${config.baseURL}${config.a15.urls.catalog}`);
 
 const responseFunctions = {
-    'search': search
+    'search': search,
+    'greeting': greeting
 }
 
 const app = express();
@@ -48,13 +49,18 @@ app.post('/bot/talk', async (req, res) => {
 });
 
 function determineResponseType(witAIData) {
-    if(_.get(witAIData, 'entities.local_search_query')) {
+    if(_.get(witAIData, 'entities.greetings')) {
+        return 'greeting';
+    } else if(_.get(witAIData, 'entities.local_search_query')) {
         return 'search';
     } else {
         return 'unknown';
     }
 }
 
+async function greeting(witAIData) {
+    return generateClientResponse('Hello, what are you looking for today?');
+}
 
 async function search(witAIData, res, token, searchValue) {
 
