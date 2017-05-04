@@ -70,6 +70,10 @@ async function search(witAIData, res, token, searchValue) {
     }
 }
 
+async function refinement(witAIData, res, token, searchValue) {
+    return generateClientResponse('Heres the product in ')
+}
+
 function generateClientResponse(textResponse = '', searchValue = '', additionalData = {}, witAIData = {}) {
     return {
         textResponse,
@@ -85,27 +89,3 @@ async function catalogSearch(data,res,token,text) {
 }
 
 app.listen(config.port);
-
-// .then((data) => {
-//             const witResponseData = data;
-//             console.log('wit.ai response: ' + JSON.stringify(witResponseData));
-
-//             if (!token) {
-//                 return tokenClient.getGuestToken();
-//             } else {
-//                 return token;
-//             }
-//         })
-//         .then((tokenResponse) => {
-//             console.log('token response ', JSON.stringify(tokenResponse, null, 2));
-//             const token = _.get(tokenResponse, 'authToken');
-
-//             res.cookie('urbnAuthToken', token);
-//             return catalogClient.search(text, token);
-//         })
-//         .then((searchResults) => {
-//             const resultsAsString = JSON.stringify(searchResults, null, 2);
-//             console.log('search results ', resultsAsString);
-//             res.render('test');
-//         })
-//         .catch(console.error);
