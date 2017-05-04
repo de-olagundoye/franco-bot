@@ -1,6 +1,5 @@
 const child_process = require('child_process');
 const path = require('path');
-const _ = require('lodash');
 
 const projectRoot = path.resolve(`${__dirname}/..`);
 const nginxConfigFile = path.join(projectRoot, 'nginx/botserver.conf');
@@ -10,11 +9,21 @@ function showHelp() {
 }
 
 function startNginx() {
-
+    child_process.exec(`sudo nginx -c ${nginxConfigFile}`, (err, stdout, stderr) => {
+        if (err) {
+            console.error(`Could not start nginx: ${err}`);
+            process.exit(2);
+        }
+    });
 }
 
 function stopNginx() {
-
+    child_process.exec('sudo nginx -s stop', (err, stdout, stderr) => {
+        if (err) {
+            console.error(`Could not stop nginx: ${err}`);
+            process.exit(3);
+        }
+    });
 }
 
 function processCommandlineArgs(args) {
@@ -23,7 +32,7 @@ function processCommandlineArgs(args) {
         process.exit(1);
     }
 
-    const command = args[0];
+    const command = args[args.length - 1];
     
     switch (command) {
         case 'start':
@@ -39,3 +48,6 @@ function processCommandlineArgs(args) {
             break;
     }
 }
+
+processCommandlineArgs(process.argv);
+

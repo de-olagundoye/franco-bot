@@ -1,3 +1,10 @@
+### Installation
+ 1. npm install
+ 2. Add '127.0.0.1   local.francobot.com' to your /etc/hosts file (need to edit with sudo privileges)
+ 3. Start nginx with 'npm run startnginx'
+ 4. Start the node server with 'npm run start'
+ 5. In a browser, go to http://local.francobot.com/bot/talk
+
 ### User Stories
  - **FRANCO** greets **USER** by asking what **USER** would like to find
  - Franco pulls appropriate category with any initial queries

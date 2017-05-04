@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-inspection": "nodemon --inspect-brk index.js"
+    "inspection": "nodemon --inspect-brk index.js",
+    "startnginx": "node ../scripts/nginx.js start",
+    "stopnginx": "node ../scripts/nginx.js stop"
   },
   "repository": {
     "type": "git",
