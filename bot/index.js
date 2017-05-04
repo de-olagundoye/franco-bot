@@ -56,6 +56,7 @@ function determineResponseType(witAIData) {
 
 
 async function search(witAIData, res, token, searchValue) {
+    const searchTerm = _.get(witAIData, 'entities.local_search_query.0.value')
     if(_.get(witAIData, 'entities.intent', false)) {
         let catalogSearchResults;
         try{
@@ -63,10 +64,10 @@ async function search(witAIData, res, token, searchValue) {
         } catch(event) {
             console.log(event);
         }
-        return generateClientResponse('Here are some products', searchValue, catalogSearchResults, witAIData)
+        return generateClientResponse('Here are some products', searchTerm, catalogSearchResults, witAIData)
     }
     else {
-        return generateClientResponse('Please enter a color', searchValue, {}, witAIData);
+        return generateClientResponse('Please enter a color', searchTerm, {}, witAIData);
     }
 }
 
