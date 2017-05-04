@@ -48,22 +48,39 @@ app.post('/bot/talk', async (req, res) => {
 function determineResponseType(witAIData) {
     if(_.get(witAIData, 'entities.local_search_query')) {
         return 'search';
-    }
-    else {
+    } else {
         return 'unknown';
     }
 }
 
 
 async function search(witAIData, res, token, searchValue) {
+    
+    let urbnQueryItems = [];
+    let searchQuery = _.get(witAIData, 'entities.local_search_query');
+
+    searchQuery.forEach((item) =>{
+        urbnQueryItems.push(item.value);
+    })
+
     if(_.get(witAIData, 'entities.intent', false)) {
         let catalogSearchResults;
+        let returnedProducts;
+
         try{
             catalogSearchResults = await catalogSearch(witAIData,res,token,searchValue);
+            let jsonResult = JSON.parse(catalogSearchResults);
+            let records = jsonResult.records;
+
+            records.forEach((record) => {
+                recordMeta = _.get(record, 'allMeta.tile.product');
+                returnedProducts.push(recordMeta);
+            })
         } catch(event) {
             console.log(event);
         }
         return generateClientResponse('Here are some products', searchValue, catalogSearchResults, witAIData)
+
     }
     else {
         return generateClientResponse('Please enter a color', searchValue, {}, witAIData);
