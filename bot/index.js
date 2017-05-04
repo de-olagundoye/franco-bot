@@ -10,15 +10,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/views'));
 app.set ('view engine', 'ejs');
 
-app.get('/', (req, res) => {
-    res.send('hello world');
-});
-
-app.get('/test', (req, res) => {
+app.get('/bot/talk', (req, res) => {
     res.render('test');
 })
 
-app.post('/test', (req, res) => {
+app.post('/bot/talk', (req, res) => {
     const text = req.body.text;
     res.send('you sent "' + text + '".');
 
