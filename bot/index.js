@@ -61,7 +61,7 @@ async function search(witAIData, res, token, searchValue) {
     if(_.get(witAIData, 'entities.intent', false)) {
         let catalogSearchResults;
         try{
-            catalogSearchResults = await catalogSearch(witAIData,res,token,searchValue);
+            catalogSearchResults = await catalogSearch(witAIData,res,token,searchTerm);
         } catch(event) {
             console.log(event);
         }
@@ -85,9 +85,9 @@ function generateClientResponse(textResponse = '', searchValue = '', additionalD
     }
 }
 
-async function catalogSearch(data,res,token,text) {
+async function catalogSearch(data,res,token,searchTerm) {
     res.cookie('urbnAuthToken', token);
-    return await catalogClient.search(text, token);
+    return await catalogClient.search(searchTerm, token);
 }
 
 app.listen(config.port);
