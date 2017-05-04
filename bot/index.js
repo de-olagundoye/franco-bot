@@ -11,6 +11,10 @@ const witToken = config.witai.serverAccessToken;
 const tokenClient = new TokenClient(`${config.baseURL}${config.a15.urls.token}`);
 const catalogClient = new CatalogClient(`${config.baseURL}${config.a15.urls.catalog}`);
 
+const responseFunctions = {
+    'search': search
+}
+
 const app = express();
 
 app.use(cookieParser());
@@ -38,17 +42,18 @@ app.post('/bot/talk', async (req, res) => {
     }
     console.log('token response ', JSON.stringify(tokenResponse, null, 2));
     token = _.get(tokenResponse, 'authToken');
-    res.send(await search(witAIData,res,token,text));     
+    res.send(await responseFunctions[responseType](witAIData,res,token,text));     
 });
 
 function determineResponseType(witAIData) {
-    if(_.get(witAIData, 'local_search_query')) {
+    if(_.get(witAIData, 'entities.local_search_query')) {
         return 'search';
     }
     else {
         return 'unknown';
     }
 }
+
 
 async function search(witAIData, res, token, searchValue) {
     if(_.get(witAIData, 'entities.intent', false)) {
