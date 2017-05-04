@@ -12,7 +12,7 @@ app.set ('view engine', 'ejs');
 
 app.get('/bot/talk', (req, res) => {
     res.render('test');
-})
+});
 
 app.post('/bot/talk', (req, res) => {
     const text = req.body.text;
@@ -24,6 +24,6 @@ app.post('/bot/talk', (req, res) => {
         console.log('wit.ai response: ' + JSON.stringify(data));
     })
     .catch(console.error);
-})
+});
 
 app.listen(config.port);
