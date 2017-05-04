@@ -33,7 +33,7 @@ app.post('/bot/talk', async (req, res) => {
     let token = _.get(req.cookies, 'urbnAuthToken');
     
     const client = new wit({accessToken: witToken});
-    const witAIData = await client.message(text, {});
+    const witAIData = await client.message(searchTerm, {});
     const responseType = determineResponseType(witAIData);
 
     if (!token) {
