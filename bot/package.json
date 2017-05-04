@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "inspection": "nodemon --inspect-brk index.js",
     "startnginx": "node ../scripts/nginx.js start",
-    "stopnginx": "node ../scripts/nginx.js stop"
+    "stopnginx": "node ../scripts/nginx.js stop",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
