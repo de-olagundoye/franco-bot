@@ -4,10 +4,11 @@
   "description": "URBN Personal Shopping Bot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "inspection": "nodemon --inspect-brk index.js",
     "startnginx": "node ../scripts/nginx.js start",
-    "stopnginx": "node ../scripts/nginx.js stop",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "stopnginx": "node ../scripts/nginx.js stop"
   },
   "repository": {
     "type": "git",
@@ -32,5 +33,8 @@
     "node-wit": "^4.2.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
