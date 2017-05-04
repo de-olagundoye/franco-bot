@@ -29,6 +29,8 @@ app.post('/bot/talk', async (req, res) => {
     
     const client = new wit({accessToken: witToken});
     const witAIData = await client.message(text, {});
+    const responseType = determineResponseType(witAIData);
+
     if (!token) {
         tokenResponse = await tokenClient.getGuestToken();
     } else {
@@ -38,6 +40,15 @@ app.post('/bot/talk', async (req, res) => {
     token = _.get(tokenResponse, 'authToken');
     res.send(await search(witAIData,res,token,text));     
 });
+
+function determineResponseType(witAIData) {
+    if(_.get(witAIData, 'local_search_query')) {
+        return 'search';
+    }
+    else {
+        return 'unknown';
+    }
+}
 
 async function search(witAIData, res, token, searchValue) {
     if(_.get(witAIData, 'entities.intent', false)) {
@@ -50,7 +61,7 @@ async function search(witAIData, res, token, searchValue) {
         return generateClientResponse('Here are some products', searchValue, catalogSearchResults, witAIData)
     }
     else {
-        return generateClientResponse('Please enter a color', {}, searchValue, witAIData);
+        return generateClientResponse('Please enter a color', searchValue, {}, witAIData);
     }
 }
 
