@@ -29,10 +29,12 @@ app.get('/bot/talk', async (req, res) => {
 
 app.post('/bot/talk', async (req, res) => {
     const text = req.body.text;
+    const prevSearchTerm = _.get(req, 'body.searchTerm', '');
+    const searchTerm = text + ' ' + prevSearchTerm;
     let token = _.get(req.cookies, 'urbnAuthToken');
     
     const client = new wit({accessToken: witToken});
-    const witAIData = await client.message(text, {});
+    const witAIData = await client.message(searchTerm, {});
     const responseType = determineResponseType(witAIData);
 
     if (!token) {
@@ -55,7 +57,7 @@ function determineResponseType(witAIData) {
 
 
 async function search(witAIData, res, token, searchValue) {
-    
+
     let urbnQueryItems = [];
     let searchQuery = _.get(witAIData, 'entities.local_search_query');
 
@@ -63,12 +65,13 @@ async function search(witAIData, res, token, searchValue) {
         urbnQueryItems.push(item.value);
     })
 
+    const searchTerm = _.get(witAIData, 'entities.local_search_query.0.value')
     if(_.get(witAIData, 'entities.intent', false)) {
         let catalogSearchResults;
         let returnedProducts;
 
         try{
-            catalogSearchResults = await catalogSearch(witAIData,res,token,searchValue);
+            catalogSearchResults = await catalogSearch(witAIData,res,token,searchTerm);
             let jsonResult = JSON.parse(catalogSearchResults);
             let records = jsonResult.records;
 
@@ -79,12 +82,15 @@ async function search(witAIData, res, token, searchValue) {
         } catch(event) {
             console.log(event);
         }
-        return generateClientResponse('Here are some products', searchValue, catalogSearchResults, witAIData)
-
+        return generateClientResponse('Here are some products', searchTerm, catalogSearchResults, witAIData)
     }
     else {
-        return generateClientResponse('Please enter a color', searchValue, {}, witAIData);
+        return generateClientResponse('Please enter a color', searchTerm, {}, witAIData);
     }
+}
+
+async function refinement(witAIData, res, token, searchValue) {
+    return generateClientResponse('Heres the product in ')
 }
 
 function generateClientResponse(textResponse = '', searchValue = '', additionalData = {}, witAIData = {}) {
@@ -96,33 +102,9 @@ function generateClientResponse(textResponse = '', searchValue = '', additionalD
     }
 }
 
-async function catalogSearch(data,res,token,text) {
+async function catalogSearch(data,res,token,searchTerm) {
     res.cookie('urbnAuthToken', token);
-    return await catalogClient.search(text, token);
+    return await catalogClient.search(searchTerm, token);
 }
 
 app.listen(config.port);
-
-// .then((data) => {
-//             const witResponseData = data;
-//             console.log('wit.ai response: ' + JSON.stringify(witResponseData));
-
-//             if (!token) {
-//                 return tokenClient.getGuestToken();
-//             } else {
-//                 return token;
-//             }
-//         })
-//         .then((tokenResponse) => {
-//             console.log('token response ', JSON.stringify(tokenResponse, null, 2));
-//             const token = _.get(tokenResponse, 'authToken');
-
-//             res.cookie('urbnAuthToken', token);
-//             return catalogClient.search(text, token);
-//         })
-//         .then((searchResults) => {
-//             const resultsAsString = JSON.stringify(searchResults, null, 2);
-//             console.log('search results ', resultsAsString);
-//             res.render('test');
-//         })
-//         .catch(console.error);
