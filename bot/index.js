@@ -69,7 +69,7 @@ function determineResponseType(witAIData) {
 }
 
 async function greeting(witAIData) {
-    return generateClientResponse('Hello, what are you looking for today?');
+    return generateClientResponse('greeting', 'Hello, what are you looking for today?');
 }
 
 async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
@@ -103,29 +103,30 @@ async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
         } catch(event) {
             console.log(event);
         }
-        return generateClientResponse('Here are some products', searchValue, catalogSearchResults, witAIData)
+        return generateClientResponse('product', 'Here are some products', searchValue, catalogSearchResults, witAIData)
     }
     else {
-        return generateClientResponse('Please enter a color', searchValue, {}, witAIData);
+        return generateClientResponse('color', 'Please enter a color', searchValue, {}, witAIData);
     }
 }
 
 async function unknown(witAIData, res, token, searchValue) {
-    return generateClientResponse("I'm sorry.  I don't understand.  Can you simplify your response?");
+    return generateClientResponse('unknown', "I'm sorry.  I don't understand.  Can you simplify your response?");
 }
 
 async function refinement(witAIData, res, token, searchValue) {
-    return generateClientResponse('Heres the product in ')
+    return generateClientResponse('refinement', 'Heres the product in ')
 }
 
 async function cart(witAIData, res, token, searchTerm, prevSearchTerm) {
-    return generateClientResponse('No problem. Its been added to your cart', searchTerm, {}, witAIData);
+    return generateClientResponse('cart', 'No problem. Its been added to your cart', searchTerm, {}, witAIData);
 }
 
-function generateClientResponse(textResponse = '', searchValue = '', additionalData = {}, witAIData = {}) {
+function generateClientResponse(responseType, textResponse = '', searchValue = '', additionalData = {}, witAIData = {}) {
     console.log(searchValue);
     console.log(witAIData);
     return {
+        responseType,
         textResponse,
         searchValue,
         additionalData,
