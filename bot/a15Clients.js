@@ -1,4 +1,5 @@
 const request = require('request-promise-native');
+const _ = require('lodash');
 
 class TokenClient {
     constructor(url) {
@@ -26,7 +27,7 @@ class CatalogClient {
         const route = {
             uri: `${this.basePath}/pools/${poolId}/products/searches`,
             headers: {
-                'X-Urbn-Auth-Token': token,
+                'X-Urbn-Auth-Token': _.get(token, 'authToken'),
                 'X-Urbn-Language': 'en-US',
                 'X-Urbn-Currency': 'USD',
                 'X-Urbn-Channel': 'web'
