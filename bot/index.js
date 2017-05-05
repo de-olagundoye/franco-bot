@@ -92,7 +92,7 @@ async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
         let returnedProducts = [];
 
         try{
-            catalogSearchResults = await catalogSearch(witAIData,res,token,searchTerm);
+            catalogSearchResults = await catalogSearch(witAIData,res,token,searchValue);
             let jsonResult = JSON.parse(catalogSearchResults);
             let records = jsonResult.records;
 
