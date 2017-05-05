@@ -69,7 +69,7 @@ function determineResponseType(witAIData) {
 }
 
 async function greeting(witAIData) {
-    return generateClientResponse('greeting', 'Hello, what are you looking for today?');
+    return generateClientResponse('greeting', "Hi, I'm Franco. What can I help you find today?");
 }
 
 async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
@@ -103,10 +103,10 @@ async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
         } catch(event) {
             console.log(event);
         }
-        return generateClientResponse('product', 'Here are some products', searchValue, catalogSearchResults, witAIData)
+        return generateClientResponse('product', "Here's what I found for you today'", searchValue, catalogSearchResults, witAIData)
     }
     else {
-        return generateClientResponse('color', 'Please enter a color', searchValue, {}, witAIData);
+        return generateClientResponse('color', 'What color would you like that in?', searchValue, {}, witAIData);
     }
 }
 
