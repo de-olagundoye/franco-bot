@@ -13,7 +13,8 @@ const catalogClient = new CatalogClient(`${config.baseURL}${config.a15.urls.cata
 
 const responseFunctions = {
     'search': search,
-    'greeting': greeting
+    'greeting': greeting,
+    'unknown': unknown
 }
 
 const app = express();
@@ -93,6 +94,10 @@ async function search(witAIData, res, token, searchValue) {
     else {
         return generateClientResponse('Please enter a color', searchTerm, {}, witAIData);
     }
+}
+
+async function unknown(witAIData, res, token, searchValue) {
+    return generateClientResponse("I'm sorry.  I don't understand.  Can you simplify your response?");
 }
 
 async function refinement(witAIData, res, token, searchValue) {
