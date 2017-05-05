@@ -32,7 +32,7 @@ app.get('/bot/talk', async (req, res) => {
 app.post('/bot/talk', async (req, res) => {
     const text = req.body.text;
     const prevSearchTerm = _.get(req, 'body.searchTerm', '');
-    const searchTerm = text + ' ' + prevSearchTerm;
+    const searchTerm = text;
     let token = _.get(req.cookies, 'urbnAuthToken');
     
     const client = new wit({accessToken: witToken});
@@ -44,15 +44,15 @@ app.post('/bot/talk', async (req, res) => {
     } else {
         tokenResponse = token;
     }
-    console.log('token response ', JSON.stringify(tokenResponse, null, 2));
+    //console.log('token response ', JSON.stringify(tokenResponse, null, 2));
     token = _.get(tokenResponse, 'authToken');
-    res.send(await responseFunctions[responseType](witAIData,res,token,text));     
+    res.send(await responseFunctions[responseType](witAIData,res,token,searchTerm,prevSearchTerm));     
 });
 
 function determineResponseType(witAIData) {
     if(_.get(witAIData, 'entities.greetings')) {
         return 'greeting';
-    } else if(_.get(witAIData, 'entities.local_search_query')) {
+    } else if(_.get(witAIData, 'entities.local_search_query') || _.get(witAIData, 'entities.intent.0.value.value') == 'color') {
         return 'search';
     } else {
         return 'unknown';
@@ -63,7 +63,7 @@ async function greeting(witAIData) {
     return generateClientResponse('Hello, what are you looking for today?');
 }
 
-async function search(witAIData, res, token, searchValue) {
+async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
 
     let urbnQueryItems = [];
     let searchQuery = _.get(witAIData, 'entities.local_search_query');
@@ -72,8 +72,8 @@ async function search(witAIData, res, token, searchValue) {
         urbnQueryItems.push(item.value);
     })
 
-    const searchTerm = _.get(witAIData, 'entities.local_search_query.0.value')
-    if(_.get(witAIData, 'entities.intent', false)) {
+    const searchValue = _.get(witAIData, 'entities.local_search_query.0.value') + ' ' + prevSearchTerm;
+    if(_.get(witAIData, 'entities.intent', false) || prevSearchTerm != '') {
         let catalogSearchResults;
         let returnedProducts;
 
@@ -89,10 +89,10 @@ async function search(witAIData, res, token, searchValue) {
         } catch(event) {
             console.log(event);
         }
-        return generateClientResponse('Here are some products', searchTerm, catalogSearchResults, witAIData)
+        return generateClientResponse('Here are some products', searchValue, catalogSearchResults, witAIData)
     }
     else {
-        return generateClientResponse('Please enter a color', searchTerm, {}, witAIData);
+        return generateClientResponse('Please enter a color', searchValue, {}, witAIData);
     }
 }
 
@@ -105,6 +105,8 @@ async function refinement(witAIData, res, token, searchValue) {
 }
 
 function generateClientResponse(textResponse = '', searchValue = '', additionalData = {}, witAIData = {}) {
+    console.log(searchValue);
+    console.log(witAIData);
     return {
         textResponse,
         searchValue,
