@@ -33,7 +33,6 @@ app.get('/bot/talk', async (req, res) => {
 app.post('/bot/talk', async (req, res) => {
     const text = req.body.text;
     const prevSearchTerm = _.get(req, 'body.searchTerm', '');
-    debugger;
     const searchTerm = text;
     let token = _.get(req.cookies, 'urbn_auth_payload');
 
