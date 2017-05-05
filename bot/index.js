@@ -33,6 +33,7 @@ app.get('/bot/talk', async (req, res) => {
 app.post('/bot/talk', async (req, res) => {
     const text = req.body.text;
     const prevSearchTerm = _.get(req, 'body.searchTerm', '');
+    debugger;
     const searchTerm = text;
     let token = _.get(req.cookies, 'urbnAuthToken');
     
@@ -68,14 +69,19 @@ async function greeting(witAIData) {
 
 async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
 
-    let urbnQueryItems = [];
-    let searchQuery = _.get(witAIData, 'entities.local_search_query', {});
+    // let urbnQueryItems = [];
+    // let searchQuery = _.get(witAIData, 'entities.local_search_query', {});
 
-    searchQuery.forEach((item) =>{
-        urbnQueryItems.push(item.value);
-    })
-
-    const searchValue = _.get(witAIData, 'entities.local_search_query.0.value') + ' ' + prevSearchTerm;
+    // searchQuery.forEach((item) =>{
+    //     urbnQueryItems.push(item.value);
+    // })
+    let searchValue;
+    if(_.get(witAIData, 'entities.local_search_query')) {
+        searchValue = _.get(witAIData, 'entities.local_search_query.0.value') + ' ' + prevSearchTerm;
+    } else {
+       searchValue = searchTerm + ' ' + prevSearchTerm; 
+    }
+    
     if(_.get(witAIData, 'entities.intent', false) || prevSearchTerm != '') {
         let catalogSearchResults;
         let returnedProducts;
