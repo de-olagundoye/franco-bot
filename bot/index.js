@@ -34,7 +34,13 @@ app.post('/bot/talk', async (req, res) => {
     const text = req.body.text;
     const prevSearchTerm = _.get(req, 'body.searchTerm', '');
     const searchTerm = text;
-    let token = _.get(req.cookies, 'urbnAuthToken');
+    let token = _.get(req.cookies, 'urbn_auth_payload');
+
+    console.log(token);
+
+    if (token) {
+        token = JSON.parse(token);
+    }
     
     const client = new wit({accessToken: witToken});
     const witAIData = await client.message(searchTerm, {});
@@ -46,8 +52,8 @@ app.post('/bot/talk', async (req, res) => {
         tokenResponse = token;
     }
     //console.log('token response ', JSON.stringify(tokenResponse, null, 2));
-    token = _.get(tokenResponse, 'authToken');
-    res.send(await responseFunctions[responseType](witAIData,res,token,searchTerm,prevSearchTerm));     
+    // token = _.get(tokenResponse, 'authToken');
+    res.send(await responseFunctions[responseType](witAIData,res,tokenResponse,searchTerm,prevSearchTerm));     
 });
 
 function determineResponseType(witAIData) {
@@ -78,7 +84,7 @@ async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
     const searchValue = _.get(witAIData, 'entities.local_search_query.0.value') + ' ' + prevSearchTerm;
     if(_.get(witAIData, 'entities.intent', false) || prevSearchTerm != '') {
         let catalogSearchResults;
-        let returnedProducts;
+        let returnedProducts = [];
 
         try{
             catalogSearchResults = await catalogSearch(witAIData,res,token,searchTerm);
@@ -123,7 +129,7 @@ function generateClientResponse(textResponse = '', searchValue = '', additionalD
 }
 
 async function catalogSearch(data,res,token,searchTerm) {
-    res.cookie('urbnAuthToken', token);
+    res.cookie('urbn_auth_payload', token);
     return await catalogClient.search(searchTerm, token);
 }
 
