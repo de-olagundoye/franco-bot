@@ -38,7 +38,7 @@ app.post('/bot/talk', async (req, res) => {
 
     console.log(token);
 
-    if (token) {
+    if (_.isString(token)) {
         token = JSON.parse(token);
     }
     
