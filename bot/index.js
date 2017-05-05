@@ -103,7 +103,7 @@ async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
         } catch(event) {
             console.log(event);
         }
-        return generateClientResponse('product', "Here's what I found for you today'", searchValue, catalogSearchResults, witAIData)
+        return generateClientResponse('product', "Here's what I found for you today", searchValue, catalogSearchResults, witAIData)
     }
     else {
         return generateClientResponse('color', 'What color would you like that in?', searchValue, {}, witAIData);
