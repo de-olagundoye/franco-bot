@@ -52,7 +52,7 @@ app.post('/bot/talk', async (req, res) => {
 function determineResponseType(witAIData) {
     if(_.get(witAIData, 'entities.greetings')) {
         return 'greeting';
-    } else if(_.get(witAIData, 'entities.local_search_query') || _.get(witAIData, 'entities.intent.0.value.value') == 'color') {
+    } else if(_.get(witAIData, 'entities.local_search_query') || _.get(witAIData, 'entities.intent.0.value') == 'color') {
         return 'search';
     } else {
         return 'unknown';
@@ -66,7 +66,7 @@ async function greeting(witAIData) {
 async function search(witAIData, res, token, searchTerm, prevSearchTerm) {
 
     let urbnQueryItems = [];
-    let searchQuery = _.get(witAIData, 'entities.local_search_query');
+    let searchQuery = _.get(witAIData, 'entities.local_search_query', {});
 
     searchQuery.forEach((item) =>{
         urbnQueryItems.push(item.value);
