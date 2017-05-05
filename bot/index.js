@@ -14,7 +14,8 @@ const catalogClient = new CatalogClient(`${config.baseURL}${config.a15.urls.cata
 const responseFunctions = {
     'search': search,
     'greeting': greeting,
-    'unknown': unknown
+    'unknown': unknown,
+    'cart': cart
 }
 
 const app = express();
@@ -54,6 +55,8 @@ function determineResponseType(witAIData) {
         return 'greeting';
     } else if(_.get(witAIData, 'entities.local_search_query') || _.get(witAIData, 'entities.intent.0.value') == 'color') {
         return 'search';
+    } else if(_.get(witAIData, 'entities.intent.0.value') == 'cart') {
+        return 'cart';
     } else {
         return 'unknown';
     }
@@ -102,6 +105,10 @@ async function unknown(witAIData, res, token, searchValue) {
 
 async function refinement(witAIData, res, token, searchValue) {
     return generateClientResponse('Heres the product in ')
+}
+
+async function cart(witAIData, res, token, searchTerm, prevSearchTerm) {
+    return generateClientResponse('No problem. Its been added to your cart', searchTerm, {}, witAIData);
 }
 
 function generateClientResponse(textResponse = '', searchValue = '', additionalData = {}, witAIData = {}) {
